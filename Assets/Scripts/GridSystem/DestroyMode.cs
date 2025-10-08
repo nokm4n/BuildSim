@@ -21,6 +21,7 @@ public class DestroyMode : AbstractMode
 		var building = gridObj.GetBuilding();
 		if (building != null)
 		{
+			CEvents.FireBuildingDestroyed(building);
 			List<Vector2Int> gridPosList = building.GetGridPosList(new Vector2Int(x, z), Dir.Down);
 			foreach (var gridPos in gridPosList)
 			{

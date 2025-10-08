@@ -23,7 +23,9 @@ public abstract class Building : MonoBehaviour
     protected int level = 0;
     protected BuildingState curentState;
     private BuildingStateType _buildingStateType;
-    
+    private Vector3 _origin;
+
+    public Vector3 Origin => _origin;
     public List<Renderer> Renderers => _render;
 
     public List<Vector2Int> GetGridPosList(Vector2Int offset, Dir dir)
@@ -57,6 +59,8 @@ public abstract class Building : MonoBehaviour
 
     public virtual void CreateBuilding(Vector3 origin)
     {
+        
+        _origin = origin;
         SetState(BuildingStateType.NotConstructed);
     }
 

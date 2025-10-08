@@ -50,6 +50,7 @@ public class BuildMode : AbstractMode
 		{
 			var building = MonoBehaviour.Instantiate(selectedBuilding, grid.GetWorldPos(x, z), Quaternion.identity);
 			building.CreateBuilding(grid.GetWorldPos(x, z));
+			CEvents.FireBuildingCreated(building);
 			foreach (var gridObject in gridObjList)
 			{
 				gridObject.SetBuilding(building);

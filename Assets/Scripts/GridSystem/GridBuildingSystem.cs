@@ -31,7 +31,13 @@ public class GridBuildingSystem : MonoBehaviour
 		}
 		instance = this;
 
+		CEvents.OnLoadSave += LoadBuildings;
 		_grid = new Grid<GridObject>(_width, _height, _cellSize, Vector3.zero, (Grid<GridObject> g, int x, int z) => new GridObject(g, x, z));
+	}
+
+	private void OnDisable()
+	{
+		CEvents.OnLoadSave -= LoadBuildings;
 	}
 
 	private void Update()
@@ -169,5 +175,29 @@ public class GridBuildingSystem : MonoBehaviour
 			}
 		}
 		return canBuild;
+	}
+
+	private void LoadBuildings(List<BuildingSaveData> saveData)
+	{
+		foreach (BuildingSaveData data in saveData)
+		{
+			foreach (Building buildingPrefab in _buildings)
+			{
+				if (buildingPrefab.Type == data.type)
+				{
+					_selectedBuilding = buildingPrefab;
+					_grid.GetGridPos(data.origin, out int x, out int z);
+					CanBuild(x, z, out List<GridObject> gridObjList);
+					var building = MonoBehaviour.Instantiate(buildingPrefab, data.origin, Quaternion.identity);
+					building.CreateBuilding(data.origin);
+					CEvents.FireBuildingCreated(building);
+					foreach (var gridObject in gridObjList)
+					{
+						gridObject.SetBuilding(building);
+
+					}
+				}
+			}
+		}
 	}
 }
